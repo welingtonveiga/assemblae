@@ -2,7 +2,6 @@ package br.com.machinae.assemblae;
 
 import br.com.machinae.assemblae.annotation.DataTransferObject;
 import br.com.machinae.assemblae.annotation.Ignore;
-import br.com.machinae.assemblae.annotation.MappedProperty;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -37,84 +36,9 @@ public class Assemblae {
         final Field[] fields = dtoClass.getDeclaredFields();
         for(Field field : fields)
             if(!field.isAnnotationPresent(Ignore.class))
-            {
-                MappedProperty map = field.getAnnotation(MappedProperty.class);
-
-                final String dtoFieldName = field.getName();
-                final String modelFieldName = getModelPropertyName(dtoFieldName, map);
-                final Transformer transformer = getTransformerInstance(map);
-
-                propertyTransferParams.add(new PropertyTransferParams(modelFieldName, dtoFieldName, transformer));
-            }
+                propertyTransferParams.add(PropertyTransferParams.build(field));
 
         return propertyTransferParams;
     }
 
-    /**
-     *
-     * @param map
-     * @return
-     */
-    private Transformer getTransformerInstance(MappedProperty map)
-    {
-
-        Transformer transformer;
-
-        Class<? extends Transformer> transformerClass;
-        if( map != null)
-            transformerClass = map.transformer();
-        else
-            transformerClass = NoTransformation.class;
-
-            String transformerHash = transformerClass.getName();
-            if(!transformerInstances.containsKey(transformerHash))
-                transformerInstances.put(transformerHash, createInstance(transformerClass));
-
-            transformer = transformerInstances.get(transformerHash);
-
-        return transformer;
-    }
-
-    /**
-     * Creates a instace given a class
-     *
-     * @param transformerClass class of instance wanted
-     * @return a class instance
-     * @throws AssemblerException if instance cant be created
-     */
-    Transformer createInstance(Class<? extends Transformer> transformerClass)
-    {
-        try
-        {
-            return transformerClass.newInstance();
-        }
-        catch (InstantiationException e)
-        {
-            throw new AssemblerException("Transformer creation error", e);
-        } catch (IllegalAccessException e)
-        {
-            throw new AssemblerException("Transformer creation error", e);
-        }
-    }
-
-    /**
-     * Resolve the model property name by MappedProperty annotation and a
-     * default name.
-     *
-     * @param defaultName a default name, typically the dto property name
-     * @param map MappedProperty annotation
-     * @return model property name
-     */
-    String getModelPropertyName(String defaultName, MappedProperty map) {
-
-        String fieldName = defaultName;
-
-        if (map != null){
-            String mappedName = map.to();
-            if (mappedName != null && !mappedName.isEmpty())
-                fieldName = mappedName;
-        }
-
-        return fieldName;
-    }
 }

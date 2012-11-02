@@ -9,7 +9,7 @@ import br.com.machinae.assemblae.annotation.MappedProperty;
 @DataTransferObject
 public class DTOWithTransformerMappedProperty {
 
-    @MappedProperty
+    @MappedProperty(transformer = DummyTransformer.class )
     private Integer field;
 
 
