@@ -3,9 +3,9 @@ package br.com.machinae.assemblae;
 
 import br.com.machinae.assemblae.annotation.Ignore;
 import br.com.machinae.assemblae.annotation.MappedProperty;
-import br.com.machinae.assemblae.testdtos.DTOWithOneNamedMappedProperty;
-import br.com.machinae.assemblae.testdtos.DTOWithOneProperty;
-import br.com.machinae.assemblae.testdtos.DTOWithTransformerMappedProperty;
+import br.com.machinae.assemblae.tests.DTOWithOneNamedMappedProperty;
+import br.com.machinae.assemblae.tests.DTOWithOneProperty;
+import br.com.machinae.assemblae.tests.DTOWithTransformerMappedProperty;
 import org.junit.Test;
 
 import java.lang.annotation.Annotation;
@@ -17,11 +17,10 @@ public class PropertyTransferParamsTest {
 
     private static final Class<? extends Annotation> IGNORE_ANNOTATION = Ignore.class;
 
-    private static final Class<? extends Annotation> MAPPED_PROPERTY_ANNOTATION =MappedProperty.class;
+    private static final Class<? extends Annotation> MAPPED_PROPERTY_ANNOTATION = MappedProperty.class;
 
     @Test
-    public void getModelPropertyNameShouldReturnsDTONameWhenNull() throws Exception
-    {
+    public void getModelPropertyNameShouldReturnsDTONameWhenNull() throws Exception {
         // Arrange
         String expectedPropertyName = "defaultDefined";
         PropertyTransferParams params = new PropertyTransferParams(expectedPropertyName, null, null);
@@ -35,8 +34,7 @@ public class PropertyTransferParamsTest {
     }
 
     @Test
-    public void getModelPropertyNameShouldReturnsDTONameWhenEmpty() throws Exception
-    {
+    public void getModelPropertyNameShouldReturnsDTONameWhenEmpty() throws Exception {
         // Arrange
         String expectedPropertyName = "defaultDefined";
         PropertyTransferParams params = new PropertyTransferParams(expectedPropertyName, "", null);
@@ -50,10 +48,9 @@ public class PropertyTransferParamsTest {
     }
 
     @Test
-    public void getModelPropertyNameShouldReturnsValidValue() throws Exception
-    {
+    public void getModelPropertyNameShouldReturnsValidValue() throws Exception {
         // Arrange
-        String defaultPropertyName  = "defaultDefined";
+        String defaultPropertyName = "defaultDefined";
         String expectedPropertyName = "definedDefined";
         PropertyTransferParams params = new PropertyTransferParams(defaultPropertyName, expectedPropertyName, null);
 
@@ -79,7 +76,7 @@ public class PropertyTransferParamsTest {
 
         // Input Assert
         assertFalse(field.isAnnotationPresent(IGNORE_ANNOTATION));
-        final String propertyName =  field.getName();
+        final String propertyName = field.getName();
 
         // Act
         PropertyTransferParams params = PropertyTransferParams.build(field);
@@ -94,8 +91,8 @@ public class PropertyTransferParamsTest {
 
         // Arrange
         Field field = DTOWithOneNamedMappedProperty.class.getDeclaredFields()[0];
-        final String dtoPropertyName   = field.getName();
-        final String modelPropertyName =  field.getAnnotation(MappedProperty.class).to();
+        final String dtoPropertyName = field.getName();
+        final String modelPropertyName = field.getAnnotation(MappedProperty.class).to();
 
         // Input Assert
 
@@ -143,7 +140,6 @@ public class PropertyTransferParamsTest {
         assertTrue(params.getTransformer() instanceof NoTransformation);
     }
 
-
     @Test
     public void buildReturnShouldReturnDefinedTransformation() throws Exception {
 
@@ -158,7 +154,7 @@ public class PropertyTransferParamsTest {
         PropertyTransferParams params = PropertyTransferParams.build(field);
 
         // Assert
-        assertTrue( definedTransformerClass.isInstance(params.getTransformer()));
+        assertTrue(definedTransformerClass.isInstance(params.getTransformer()));
     }
 
 

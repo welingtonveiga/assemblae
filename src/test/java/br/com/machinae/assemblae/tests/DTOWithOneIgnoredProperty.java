@@ -1,11 +1,10 @@
-package br.com.machinae.assemblae.testdtos;
+package br.com.machinae.assemblae.tests;
 
 import br.com.machinae.assemblae.annotation.DataTransferObject;
 import br.com.machinae.assemblae.annotation.Ignore;
 
 /**
  * DTO with one property ignored for testing.
- *
  */
 
 @DataTransferObject

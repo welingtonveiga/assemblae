@@ -18,11 +18,10 @@ class PropertyTransferParams {
 
     private final String dtoProperty;
 
-    private final Transformer<?,?> transformer;
+    private final Transformer<Object, Object> transformer;
 
 
-    static PropertyTransferParams build(final Field field)
-    {
+    static PropertyTransferParams build(final Field field) {
         checkNotNull(field);
 
         final MappedProperty map = field.getAnnotation(MappedProperty.class);
@@ -30,20 +29,19 @@ class PropertyTransferParams {
         String dtoPropName = field.getName();
 
         String modelPropName = null;
-        Transformer transformer;
+        Transformer<Object, Object> transformer;
 
-        if( map != null)
-        {
+        if (map != null) {
             modelPropName = map.to();
             transformer = newTransformerInstance(map.transformer());
-        }
-        else
+        } else
             transformer = newTransformerInstance(NoTransformation.class);
 
-        return new PropertyTransferParams(dtoPropName, modelPropName, transformer);
+        return new PropertyTransferParams(dtoPropName, modelPropName,  transformer);
     }
 
-    private static Transformer newTransformerInstance(Class<? extends Transformer> clazz){
+    @SuppressWarnings("unchecked")
+    private static Transformer<Object, Object> newTransformerInstance(Class<? extends Transformer> clazz) {
         try {
             return clazz.newInstance();
         } catch (InstantiationException e) {
@@ -53,27 +51,31 @@ class PropertyTransferParams {
         }
     }
 
-    PropertyTransferParams( String dtoProperty, String modelProperty, Transformer<?, ?> transformer) {
+    PropertyTransferParams(String dtoProperty, String modelProperty, Transformer<Object, Object> transformer) {
         this.modelProperty = modelProperty;
         this.dtoProperty = dtoProperty;
         this.transformer = transformer;
     }
 
-    String getModelProperty()
-    {
-        if(modelProperty != null && !modelProperty.isEmpty())
+    PropertyTransferParams() {
+        this.modelProperty = null;
+        this.dtoProperty = null;
+        this.transformer = null;
+    }
+
+    String getModelProperty() {
+        if (modelProperty != null && !modelProperty.isEmpty())
             return modelProperty;
 
         // By default, if not defined a model name we will return the dto name.
         return dtoProperty;
     }
 
-    String getDtoProperty()
-    {
+    String getDtoProperty() {
         return dtoProperty;
     }
 
-    Transformer<?,?> getTransformer() {
+    Transformer<Object, Object> getTransformer() {
         return transformer;
     }
 }

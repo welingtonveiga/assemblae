@@ -12,13 +12,15 @@ import java.lang.annotation.Target;
  * Annotations for mapping configuration on copy from/to model.
  *
  * @author Welington Veiga
- * @since 21/10/2012
  * @version 1.0.0
+ * @since 21/10/2012
  */
 
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MappedProperty {
+
     public String to() default "";
+
     public Class<? extends Transformer> transformer() default NoTransformation.class;
 }

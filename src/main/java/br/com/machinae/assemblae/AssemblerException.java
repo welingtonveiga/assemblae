@@ -4,10 +4,10 @@ package br.com.machinae.assemblae;
  * Generic Exception for Assemblae API calls.
  *
  * @author Welington Veiga
- * @since 02/11/2012
  * @version 1.0.0
+ * @since 02/11/2012
  */
-public class AssemblerException extends RuntimeException{
+public class AssemblerException extends RuntimeException {
 
     /**
      * @see RuntimeException

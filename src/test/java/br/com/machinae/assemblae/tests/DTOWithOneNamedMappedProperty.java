@@ -1,4 +1,4 @@
-package br.com.machinae.assemblae.testdtos;
+package br.com.machinae.assemblae.tests;
 
 import br.com.machinae.assemblae.annotation.DataTransferObject;
 import br.com.machinae.assemblae.annotation.MappedProperty;
@@ -7,9 +7,9 @@ import br.com.machinae.assemblae.annotation.MappedProperty;
  * DTO with one field for testing
  */
 @DataTransferObject
-public class DTOWithTransformerMappedProperty {
+public class DTOWithOneNamedMappedProperty {
 
-    @MappedProperty(transformer = DummyTransformer.class )
+    @MappedProperty(to = "anotherField")
     private Integer field;
 
 
