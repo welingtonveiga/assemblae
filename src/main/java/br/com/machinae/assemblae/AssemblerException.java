@@ -1,7 +1,7 @@
 package br.com.machinae.assemblae;
 
 /**
- * Generic Exception for Assemblae API calls.
+ * Generic Exception for Assemblae2 API calls.
  *
  * @author Welington Veiga
  * @version 1.0.0

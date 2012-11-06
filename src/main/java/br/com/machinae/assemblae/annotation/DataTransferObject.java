@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation to Identify Data Transfer Objects.
- * Only anntated DTOs can be assembled by Assemblae
+ * Only anntated DTOs can be assembled by Assemblae2
  *
  * @author Welington Veiga
  * @version 1.0.0

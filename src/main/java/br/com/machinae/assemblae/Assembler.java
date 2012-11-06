@@ -1,5 +1,6 @@
 package br.com.machinae.assemblae;
 
+
 import br.com.machinae.assemblae.annotation.DataTransferObject;
 import br.com.machinae.assemblae.annotation.Ignore;
 import org.apache.commons.beanutils.BeanUtilsBean;
@@ -14,38 +15,16 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Utility to transform a model in a transfer object (DTO), and to update the model from a DTO.
+ * Assembler is a IAssembler implementation for assembly service used by exposed static Assemblae2 utility.
  *
  * @author Welington Veiga
- * @version 1.0.0
- * @see <a href="http://msdn.microsoft.com/en-us/library/ms978717.aspx">referência</a>
- * @see <a href="http://java.sun.com/blueprints/corej2eepatterns/Patterns/TransferObjectAssembler.html">referência</a>
- * @see <a href="http://www.inspire-software.com/en/index/view/open-source-GeDA-generic-DTO-assembler.html> Inspiração </a>
- * @since 21/10/2012
+ * @since 05/11/2012
+ *
+ * @param <T> DTO type
  */
-public class Assemblae {
+class Assembler<T> implements IAssembler<T>{
 
-    Assemblae(){}
-
-    private static Assemblae instance;
-
-    /**
-     * Define a Assemblae instance for exposed static assemble methods.
-     * @param ae Assemblae instance
-     */
-    static void setInstance(Assemblae ae) {
-        instance = ae;
-    }
-
-    /**
-     * A Assemblae instance for exposed static assemble methods.
-     * @return Assemblae instance
-     */
-    static Assemblae getInstance() {
-        if(instance == null)
-            instance = new Assemblae();
-        return instance;
-    }
+    Assembler(){}
 
     /**
      * Assemble a model properties in a Data Transfer Object (DTO), defined by a annotated class.
@@ -54,22 +33,26 @@ public class Assemblae {
      *
      * @param model model
      * @param dtoClass dto class
-     * @param <T> dto type
      * @return dto instance
      */
-    public static <T> T assemble(Object model, Class<T> dtoClass) {
+    @Override
+    public T assemble(Object model, Class<T> dtoClass) {
         checkNotNull(model, "Model assembled can not be null");
-
-        Assemblae ae = getInstance();
 
         T dto = instantiateDTO(dtoClass);
 
-        Collection<PropertyTransferParams> params = ae.loadPropertyTransferParams(dtoClass);
+        Collection<PropertyTransferParams> params = loadPropertyTransferParams(dtoClass);
         for(PropertyTransferParams param : params)
-            ae.copyProperty(model, dto, param);
+            copyProperty(model, dto, param);
 
         return dto;
     }
+
+    @Override
+    public Collection<T> assembleAll(Collection<Object> model, Class<T> dtoClass) {
+        return null;
+    }
+
 
     /**
      * Iterates dto class fields and configure the copy params for assemble.
@@ -108,7 +91,7 @@ public class Assemblae {
      * @return a dtoClass instance
      * @throws AssemblerException for instantiation errors
      */
-    static <T> T instantiateDTO(Class<T> dtoClass) {
+    T instantiateDTO(Class<T> dtoClass) {
         T dto = null;
         try {
             dto = dtoClass.newInstance();
@@ -146,7 +129,6 @@ public class Assemblae {
         } catch (NoSuchMethodException e) {
             throw new AssemblerException("Property copy error", e);
         }
-
     }
 
     /**
@@ -181,7 +163,5 @@ public class Assemblae {
     Object getPropertyValue(Object model, String property) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         return BeanUtilsBean.getInstance().getPropertyUtils().getProperty(model, property);
     }
-
-
 
 }

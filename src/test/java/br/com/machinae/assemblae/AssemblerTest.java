@@ -17,13 +17,13 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 /**
- * Test class for Assemblae
+ * Test class for Assembler
  *
  * @author Welington Veiga
  * @version 1.0.0
  * @since 21/10/2012
  */
-public class AssemblaeTest {
+public class AssemblerTest {
 
 
     private static final Class<? extends Annotation> MAPPED_PROPERTY_ANNOTATION = MappedProperty.class;
@@ -32,7 +32,7 @@ public class AssemblaeTest {
     @Test(expected = NullPointerException.class)
     public void loadPropertyTransferParamsShouldThrowsNullPointerExceptionLoadingANullClass() {
         // Arrange
-        Assemblae ae = new Assemblae();
+        Assembler ae = new Assembler();
 
         // Act
         Collection<PropertyTransferParams> propertyTransferParams = ae.loadPropertyTransferParams(null);
@@ -41,21 +41,20 @@ public class AssemblaeTest {
     @Test(expected = IllegalArgumentException.class)
     public void loadPropertyTransferParamsShouldThrowsIllegalArgumentExceptionLoadingANotDTOClass() {
         // Arrange
-        Class<? extends Object> clazz = new Object() {
-        }.getClass();
-        Assemblae ae = new Assemblae();
+        Class<? extends Object> clazz = new Object() {}.getClass();
+        Assembler ae = new Assembler();
 
         // Input Assert
         assertFalse("The DTO class should not be a DTO", clazz.isAnnotationPresent(DataTransferObject.class));
 
         // Act
-        Collection<PropertyTransferParams> propertyTransferParams = ae.loadPropertyTransferParams(clazz);
+        ae.loadPropertyTransferParams(clazz);
     }
 
     @Test
     public void loadPropertyTransferParamsShouldReturnAnEmptyListForDTOWithoutProperties() {
         // Arrange
-        Assemblae ae = new Assemblae();
+        Assembler ae = new Assembler();
         ae = spy(ae);
         doReturn(new PropertyTransferParams()).when(ae).buildParams((Field) any());
 
@@ -75,7 +74,7 @@ public class AssemblaeTest {
     @Test
     public void loadPropertyTransferParamsShouldGetAnNonIgnoredPropertiesMapped() throws Exception {
         // Arrange
-        Assemblae ae = new Assemblae();
+        Assembler ae = new Assembler();
         Class<?> dtoClass = DTOWithOneIgnoredProperty.class;
         Field field = dtoClass.getDeclaredFields()[0];
 
@@ -96,7 +95,7 @@ public class AssemblaeTest {
     @Test
     public void loadPropertyTransferParamsShouldReturnAPropertyWithoutAnnotations() throws Exception {
         // Arrange
-        Assemblae ae = new Assemblae();
+        Assembler ae = new Assembler();
         Class<?> dtoClass = DTOWithOneProperty.class;
         Field field = dtoClass.getDeclaredFields()[0];
 
@@ -118,7 +117,7 @@ public class AssemblaeTest {
     @Test
     public void loadPropertyTransferParamsShouldReturnAllNotIgnoredPropertiesMapped() throws Exception {
         // Arrange
-        Assemblae ae = new Assemblae();
+        Assembler ae = new Assembler();
         Class<?> dtoClass = DTOWithOneIgnoredAndOneNotAnnotatedProperty.class;
         Field[] fields = dtoClass.getDeclaredFields();
 
@@ -154,7 +153,7 @@ public class AssemblaeTest {
     @Test
     public void loadPropertyTransferParamsShouldReturnAPropertyWithMappedPropertyAnnotation() throws Exception {
         // Arrange
-        Assemblae ae = new Assemblae();
+        Assembler ae = new Assembler();
         Class<?> dtoClass = DTOWithOneMappedProperty.class;
         Field field = dtoClass.getDeclaredFields()[0];
 
@@ -176,7 +175,7 @@ public class AssemblaeTest {
     @Test
     public void loadPropertyTransferParamsShouldReturnAllPropertiesMappedAndNotAnnotated() throws Exception {
         // Arrange
-        Assemblae ae = new Assemblae();
+        Assembler ae = new Assembler();
         Class<?> dtoClass = DTOWithOneMappedAndOneNotAnnotatedProperty.class;
         Field[] fields = dtoClass.getDeclaredFields();
 
@@ -203,7 +202,7 @@ public class AssemblaeTest {
     @Test(expected = NullPointerException.class)
     public void copyPropertiesShouldThrowsNullPointerExceptionForNullModel() {
         // Arrange
-        Assemblae ae = new Assemblae();
+        Assembler ae = new Assembler();
 
         Object dto = new Object() {
             private String field = null;
@@ -219,7 +218,7 @@ public class AssemblaeTest {
     @Test(expected = NullPointerException.class)
     public void copyPropertiesShouldThrowsNullPointerExceptionForNullDTO() {
         // Arrange
-        Assemblae ae = new Assemblae();
+        Assembler ae = new Assembler();
 
         Object model = new Object() {
             private String field = null;
@@ -235,7 +234,7 @@ public class AssemblaeTest {
     @Test(expected = NullPointerException.class)
     public void copyPropertiesShouldThrowsNullPointerExceptionForNullParams() {
         // Arrange
-        Assemblae ae = new Assemblae();
+        Assembler ae = new Assembler();
 
         Object model = new Object() {
             private String field = null;
@@ -253,7 +252,7 @@ public class AssemblaeTest {
     @Test(expected = AssemblerException.class)
     public void copyPropertiesShouldThrowsExceptionForInvalidModelPropertyName() throws Exception {
         // Arrange
-        Assemblae ae = new Assemblae();
+        Assembler ae = new Assembler();
 
         final String FIELD = "field";
         final String DTO_FIELD = "dtoField";
@@ -278,7 +277,7 @@ public class AssemblaeTest {
         final String FIELD = "field";
         final String DTO_FIELD = "dtoField";
 
-        Assemblae ae = new Assemblae();
+        Assembler ae = new Assembler();
 
         Object model = new Object() {
         };
@@ -299,7 +298,7 @@ public class AssemblaeTest {
         final String FIELD = "field";
         final String DTO_FIELD = "dtoField";
 
-        Assemblae ae = new Assemblae();
+        Assembler ae = new Assembler();
 
         Object model = new Object() {
         };
@@ -324,7 +323,7 @@ public class AssemblaeTest {
         final String FIELD = "field";
         final String DTO_FIELD = "dtoField";
 
-        Assemblae ae = new Assemblae();
+        Assembler ae = new Assembler();
 
         Object model = new Object() {
         };
@@ -347,7 +346,7 @@ public class AssemblaeTest {
         final String FIELD = "field";
         final String DTO_FIELD = "dtoField";
 
-        Assemblae ae = new Assemblae();
+        Assembler ae = new Assembler();
         ae = spy(ae);
 
         PropertyTransferParams params = new PropertyTransferParams(DTO_FIELD, FIELD, new NoTransformation());
@@ -375,7 +374,7 @@ public class AssemblaeTest {
         final String DTO_FIELD = "dtoField";
         final String TRANSFORMED_VALUE = "1";
 
-        Assemblae ae = new Assemblae();
+        Assembler ae = new Assembler();
         ae = spy(ae);
 
         Transformer transformer = new NoTransformation();
@@ -398,15 +397,14 @@ public class AssemblaeTest {
         verify(ae, times(1)).setPropertyValue(dto, DTO_FIELD, TRANSFORMED_VALUE);
     }
 
-
     @Test(expected = NullPointerException.class)
     public void assembleShouldThrowNullPointerExceptionWhenModelIsNull(){
 
         // Arrange
         Object model = null;
-
+        Assembler<DTOWithOneProperty> dto = new Assembler<DTOWithOneProperty>();
         // Act
-        Assemblae.assemble(model, DTOWithOneProperty.class);
+        dto.assemble(model, DTOWithOneProperty.class);
     }
 
     @Test
@@ -414,19 +412,16 @@ public class AssemblaeTest {
 
         // Arrange
         final Class<DTOWithOneProperty> dtoClass = DTOWithOneProperty.class;
-        final String DTO_FIELD = "dtoField";
-        final String MODEL_FIELD = "modelField";
-        final Integer VALUE = -1;
 
         Object model = new Object();
 
-        Assemblae ae = new Assemblae();
+        Assembler<DTOWithOneProperty> ae = new Assembler<DTOWithOneProperty>();
         ae = spy(ae);
         doReturn(new ArrayList()).when(ae).loadPropertyTransferParams(dtoClass);
 
         // Act
-        Assemblae.setInstance(ae);
-        DTOWithOneProperty dto = Assemblae.assemble(model, DTOWithOneProperty.class);
+        Assemblae2.setInstance(ae);
+        DTOWithOneProperty dto = ae.assemble(model, DTOWithOneProperty.class);
 
         // Assert
         assertNotNull(dto);
@@ -441,19 +436,18 @@ public class AssemblaeTest {
         final Class<DTOWithOneProperty> dtoClass = DTOWithOneProperty.class;
         final String DTO_FIELD = "dtoField";
         final String MODEL_FIELD = "modelField";
-        final Integer VALUE = -1;
 
         Object model = new Object();
         PropertyTransferParams params = new PropertyTransferParams(DTO_FIELD, MODEL_FIELD, new NoTransformation());
 
-        Assemblae ae = new Assemblae();
+        Assembler<DTOWithOneProperty> ae = new Assembler<DTOWithOneProperty>();
         ae = spy(ae);
         doReturn(Arrays.asList(params)).when(ae).loadPropertyTransferParams(dtoClass);
         doNothing().when(ae).copyProperty(eq(model), any(), eq(params));
 
         // Act
-        Assemblae.setInstance(ae);
-        DTOWithOneProperty dto = Assemblae.assemble(model, DTOWithOneProperty.class);
+        Assemblae2.setInstance(ae);
+        DTOWithOneProperty dto = ae.assemble(model, DTOWithOneProperty.class);
 
         // Assert
         assertNotNull(dto);
@@ -470,21 +464,20 @@ public class AssemblaeTest {
         final String MODEL_FIELD_1 = "modelField1";
         final String DTO_FIELD_2 = "dtoField2";
         final String MODEL_FIELD_2 = "modelField2";
-        final Integer VALUE = -1;
 
         Object model = new Object();
         PropertyTransferParams params1 = new PropertyTransferParams(DTO_FIELD_1, MODEL_FIELD_1, new NoTransformation());
         PropertyTransferParams params2 = new PropertyTransferParams(DTO_FIELD_2, MODEL_FIELD_2, new NoTransformation());
 
-        Assemblae ae = new Assemblae();
+        Assembler<DTOWithOneProperty> ae = new Assembler<DTOWithOneProperty>();
         ae = spy(ae);
         doReturn(Arrays.asList(params1, params2)).when(ae).loadPropertyTransferParams(dtoClass);
         doNothing().when(ae).copyProperty(eq(model), any(), eq(params1));
         doNothing().when(ae).copyProperty(eq(model), any(), eq(params2));
 
         // Act
-        Assemblae.setInstance(ae);
-        DTOWithOneProperty dto = Assemblae.assemble(model, DTOWithOneProperty.class);
+        Assemblae2.setInstance(ae);
+        DTOWithOneProperty dto = ae.assemble(model, DTOWithOneProperty.class);
 
         // Assert
         assertNotNull(dto);
@@ -492,4 +485,28 @@ public class AssemblaeTest {
         verify(ae, times(1)).copyProperty(eq(model), any(), eq(params1));
         verify(ae, times(1)).copyProperty(eq(model), any(), eq(params2));
     }
+
+
+    @Test
+    public void assembleAllShouldNotCallCopyPropertyForAnEmptyPropertyTransferParams() throws Exception{
+
+        // Arrange
+        final Class<DTOWithOneProperty> dtoClass = DTOWithOneProperty.class;
+
+        Object model = new Object();
+
+        Assembler<DTOWithOneProperty> ae = new Assembler<DTOWithOneProperty>();
+        ae = spy(ae);
+        doReturn(new ArrayList()).when(ae).loadPropertyTransferParams(dtoClass);
+
+        // Act
+        Assemblae2.setInstance(ae);
+        DTOWithOneProperty dto = ae.assemble(model, DTOWithOneProperty.class);
+
+        // Assert
+        assertNotNull(dto);
+        verify(ae, times(1)).loadPropertyTransferParams(dtoClass);
+        verify(ae, never()).copyProperty(eq(model), any(), (PropertyTransferParams) any());
+    }
+
 }
