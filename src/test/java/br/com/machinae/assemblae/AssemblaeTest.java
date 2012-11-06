@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -406,6 +407,31 @@ public class AssemblaeTest {
 
         // Act
         Assemblae.assemble(model, DTOWithOneProperty.class);
+    }
+
+    @Test
+    public void assembleShouldNotCallCopyPropertyForAnEmptyPropertyTransferParams() throws Exception{
+
+        // Arrange
+        final Class<DTOWithOneProperty> dtoClass = DTOWithOneProperty.class;
+        final String DTO_FIELD = "dtoField";
+        final String MODEL_FIELD = "modelField";
+        final Integer VALUE = -1;
+
+        Object model = new Object();
+
+        Assemblae ae = new Assemblae();
+        ae = spy(ae);
+        doReturn(new ArrayList()).when(ae).loadPropertyTransferParams(dtoClass);
+
+        // Act
+        Assemblae.setInstance(ae);
+        DTOWithOneProperty dto = Assemblae.assemble(model, DTOWithOneProperty.class);
+
+        // Assert
+        assertNotNull(dto);
+        verify(ae, times(1)).loadPropertyTransferParams(dtoClass);
+        verify(ae, never()).copyProperty(eq(model), any(), (PropertyTransferParams) any());
     }
 
     @Test

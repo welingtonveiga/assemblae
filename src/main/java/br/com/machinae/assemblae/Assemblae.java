@@ -14,8 +14,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Utlitário para transformar um modelo em um objeto de transferência (DTO), e para  atualizar
- * o modelo a partir de um DTO.
+ * Utility to transform a model in a transfer object (DTO), and to update the model from a DTO.
  *
  * @author Welington Veiga
  * @version 1.0.0
@@ -30,16 +29,34 @@ public class Assemblae {
 
     private static Assemblae instance;
 
+    /**
+     * Define a Assemblae instance for exposed static assemble methods.
+     * @param ae Assemblae instance
+     */
     static void setInstance(Assemblae ae) {
         instance = ae;
     }
 
+    /**
+     * A Assemblae instance for exposed static assemble methods.
+     * @return Assemblae instance
+     */
     static Assemblae getInstance() {
         if(instance == null)
             instance = new Assemblae();
         return instance;
     }
 
+    /**
+     * Assemble a model properties in a Data Transfer Object (DTO), defined by a annotated class.
+     * Each property will be copied using name convention and metadata in annotations declared on
+     * DTO class, metadata will declare conversions, member access e ignored properties.
+     *
+     * @param model model
+     * @param dtoClass dto class
+     * @param <T> dto type
+     * @return dto instance
+     */
     public static <T> T assemble(Object model, Class<T> dtoClass) {
         checkNotNull(model, "Model assembled can not be null");
 
@@ -78,7 +95,7 @@ public class Assemblae {
      * @see PropertyTransferParams#build(java.lang.reflect.Field)
      *
      * @param field Field metadata
-     * @return
+     * @return parameters from field
      */
     PropertyTransferParams buildParams(Field field) {
         return PropertyTransferParams.build(field);
@@ -89,15 +106,16 @@ public class Assemblae {
      *
      * @param dtoClass class for desired dto
      * @return a dtoClass instance
+     * @throws AssemblerException for instantiation errors
      */
     static <T> T instantiateDTO(Class<T> dtoClass) {
         T dto = null;
         try {
             dto = dtoClass.newInstance();
         } catch (InstantiationException e) {
-            new AssemblerException("Failure instantiating dtoClass", e);
+            new AssemblerException("Failure instantiating dto", e);
         } catch (IllegalAccessException e) {
-            new AssemblerException("Failure instantiating dtoClass", e);
+            new AssemblerException("Failure instantiating dto", e);
         }
         return dto;
     }
@@ -140,7 +158,6 @@ public class Assemblae {
      * @param property  property to set value
      * @param propertyValue  value
      *
-     * @return value desired
      * @throws IllegalAccessException when property cant be accessed
      * @throws InvocationTargetException when setter throws exception
      * @throws NoSuchMethodException when property does not exists
