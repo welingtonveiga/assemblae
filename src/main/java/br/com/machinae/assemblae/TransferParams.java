@@ -12,7 +12,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author Welington Veiga
  * @version 1.0.0
  */
-class PropertyTransferParams {
+class TransferParams {
 
     private final String modelProperty;
 
@@ -21,7 +21,7 @@ class PropertyTransferParams {
     private final Transformer<Object, Object> transformer;
 
 
-    static PropertyTransferParams build(final Field field) {
+    static TransferParams build(final Field field) {
         checkNotNull(field);
 
         final MappedProperty map = field.getAnnotation(MappedProperty.class);
@@ -37,7 +37,7 @@ class PropertyTransferParams {
         } else
             transformer = newTransformerInstance(NoTransformation.class);
 
-        return new PropertyTransferParams(dtoPropName, modelPropName,  transformer);
+        return new TransferParams(dtoPropName, modelPropName,  transformer);
     }
 
     @SuppressWarnings("unchecked")
@@ -51,13 +51,13 @@ class PropertyTransferParams {
         }
     }
 
-    PropertyTransferParams(String dtoProperty, String modelProperty, Transformer<Object, Object> transformer) {
+    TransferParams(String dtoProperty, String modelProperty, Transformer<Object, Object> transformer) {
         this.modelProperty = modelProperty;
         this.dtoProperty = dtoProperty;
         this.transformer = transformer;
     }
 
-    PropertyTransferParams() {
+    TransferParams() {
         this.modelProperty = null;
         this.dtoProperty = null;
         this.transformer = null;

@@ -41,8 +41,8 @@ class Assembler<T> implements IAssembler<T>{
 
         T dto = instantiateDTO(dtoClass);
 
-        Collection<PropertyTransferParams> params = loadPropertyTransferParams(dtoClass);
-        for(PropertyTransferParams param : params)
+        Collection<TransferParams> params = loadPropertyTransferParams(dtoClass);
+        for(TransferParams param : params)
             copyProperty(model, dto, param);
 
         return dto;
@@ -60,28 +60,28 @@ class Assembler<T> implements IAssembler<T>{
      * @param dtoClass dto class
      * @return configuration for field copy
      */
-    Collection<PropertyTransferParams> loadPropertyTransferParams(Class<?> dtoClass) {
+    Collection<TransferParams> loadPropertyTransferParams(Class<?> dtoClass) {
         checkNotNull(dtoClass);
         checkArgument(dtoClass.isAnnotationPresent(DataTransferObject.class));
 
-        Set<PropertyTransferParams> propertyTransferParams = new HashSet<PropertyTransferParams>();
+        Set<TransferParams> transferParams = new HashSet<TransferParams>();
 
         for (Field field : dtoClass.getDeclaredFields())
             if (!field.isAnnotationPresent(Ignore.class))
-                propertyTransferParams.add(buildParams(field));
+                transferParams.add(buildParams(field));
 
-        return propertyTransferParams;
+        return transferParams;
     }
 
     /**
-     * Proxy for PropertyTransferParams builder
-     * @see PropertyTransferParams#build(java.lang.reflect.Field)
+     * Proxy for TransferParams builder
+     * @see TransferParams#build(java.lang.reflect.Field)
      *
      * @param field Field metadata
      * @return parameters from field
      */
-    PropertyTransferParams buildParams(Field field) {
-        return PropertyTransferParams.build(field);
+    TransferParams buildParams(Field field) {
+        return TransferParams.build(field);
     }
 
     /**
@@ -110,7 +110,7 @@ class Assembler<T> implements IAssembler<T>{
      * @param dto   model where the property will be copied
      * @param param copy parameters
      */
-    void copyProperty(Object model, Object dto, PropertyTransferParams param) {
+    void copyProperty(Object model, Object dto, TransferParams param) {
         checkNotNull(model, "Model cant be null for copying.");
         checkNotNull(dto, "DTO cant be null for copying.");
         checkNotNull(param, "Transfer params cant be null for copying.");

@@ -35,7 +35,7 @@ public class AssemblerTest {
         Assembler ae = new Assembler();
 
         // Act
-        Collection<PropertyTransferParams> propertyTransferParams = ae.loadPropertyTransferParams(null);
+        Collection<TransferParams> transferParams = ae.loadPropertyTransferParams(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -56,7 +56,7 @@ public class AssemblerTest {
         // Arrange
         Assembler ae = new Assembler();
         ae = spy(ae);
-        doReturn(new PropertyTransferParams()).when(ae).buildParams((Field) any());
+        doReturn(new TransferParams()).when(ae).buildParams((Field) any());
 
         Class<?> dtoClass = DTOWithoutProperties.class;
 
@@ -64,10 +64,10 @@ public class AssemblerTest {
         assertEquals("The DTO class should have fields", 0, dtoClass.getFields().length);
 
         // Act
-        Collection<PropertyTransferParams> propertyTransferParams = ae.loadPropertyTransferParams(dtoClass);
+        Collection<TransferParams> transferParams = ae.loadPropertyTransferParams(dtoClass);
 
         // Assert
-        assertTrue(propertyTransferParams.isEmpty());
+        assertTrue(transferParams.isEmpty());
     }
 
 
@@ -85,10 +85,10 @@ public class AssemblerTest {
         assertTrue("The DTO field isn't annotated with @Ignore", field.isAnnotationPresent(IGNORE_ANNOTATION));
 
         // Act
-        Collection<PropertyTransferParams> propertyTransferParams = ae.loadPropertyTransferParams(dtoClass);
+        Collection<TransferParams> transferParams = ae.loadPropertyTransferParams(dtoClass);
 
         // Assert
-        assertTrue(propertyTransferParams.isEmpty());
+        assertTrue(transferParams.isEmpty());
         verify(ae, never()).buildParams(field);
     }
 
@@ -100,17 +100,17 @@ public class AssemblerTest {
         Field field = dtoClass.getDeclaredFields()[0];
 
         ae = spy(ae);
-        doReturn(new PropertyTransferParams()).when(ae).buildParams(field);
+        doReturn(new TransferParams()).when(ae).buildParams(field);
 
         // Input Assert
         assertEquals("The DTO class should have only one field", 1, dtoClass.getDeclaredFields().length);
         assertFalse("The DTO field should not be annotated with @Ignore", dtoClass.getDeclaredFields()[0].isAnnotationPresent(IGNORE_ANNOTATION));
 
         // Act
-        Collection<PropertyTransferParams> propertyTransferParams = ae.loadPropertyTransferParams(dtoClass);
+        Collection<TransferParams> transferParams = ae.loadPropertyTransferParams(dtoClass);
 
         // Assert
-        assertEquals(1, propertyTransferParams.size());
+        assertEquals(1, transferParams.size());
         verify(ae).buildParams(field);
     }
 
@@ -132,7 +132,7 @@ public class AssemblerTest {
             ignoredField = fields[0];
         }
 
-        doReturn(new PropertyTransferParams()).when(ae).buildParams(notIgnoredField);
+        doReturn(new TransferParams()).when(ae).buildParams(notIgnoredField);
 
         // Input Assert
         assertEquals("The DTO class should have exactly two field", 2, fields.length);
@@ -142,10 +142,10 @@ public class AssemblerTest {
 
 
         // Act
-        Collection<PropertyTransferParams> propertyTransferParams = ae.loadPropertyTransferParams(dtoClass);
+        Collection<TransferParams> transferParams = ae.loadPropertyTransferParams(dtoClass);
 
         // Assert
-        assertEquals(1, propertyTransferParams.size());
+        assertEquals(1, transferParams.size());
         verify(ae).buildParams(notIgnoredField);
         verify(ae, never()).buildParams(ignoredField);
     }
@@ -158,17 +158,17 @@ public class AssemblerTest {
         Field field = dtoClass.getDeclaredFields()[0];
 
         ae = spy(ae);
-        doReturn(new PropertyTransferParams()).when(ae).buildParams(field);
+        doReturn(new TransferParams()).when(ae).buildParams(field);
 
         // Input Assert
         assertEquals("The DTO class should have only one field", 1, dtoClass.getDeclaredFields().length);
         assertTrue("The DTO field should be annotated with @MappedProperty", field.isAnnotationPresent(MAPPED_PROPERTY_ANNOTATION));
 
         // Act
-        Collection<PropertyTransferParams> propertyTransferParams = ae.loadPropertyTransferParams(dtoClass);
+        Collection<TransferParams> transferParams = ae.loadPropertyTransferParams(dtoClass);
 
         // Assert
-        assertEquals(1, propertyTransferParams.size());
+        assertEquals(1, transferParams.size());
         verify(ae).buildParams(field);
     }
 
@@ -180,8 +180,8 @@ public class AssemblerTest {
         Field[] fields = dtoClass.getDeclaredFields();
 
         ae = spy(ae);
-        doReturn(new PropertyTransferParams()).when(ae).buildParams(fields[1]);
-        doReturn(new PropertyTransferParams("", "", null)).when(ae).buildParams(fields[0]);
+        doReturn(new TransferParams()).when(ae).buildParams(fields[1]);
+        doReturn(new TransferParams("", "", null)).when(ae).buildParams(fields[0]);
 
 
         // Input Assert
@@ -191,10 +191,10 @@ public class AssemblerTest {
                         || (fields[1].isAnnotationPresent(MAPPED_PROPERTY_ANNOTATION) && !fields[0].isAnnotationPresent(MAPPED_PROPERTY_ANNOTATION)));
 
         // Act
-        Collection<PropertyTransferParams> propertyTransferParams = ae.loadPropertyTransferParams(dtoClass);
+        Collection<TransferParams> transferParams = ae.loadPropertyTransferParams(dtoClass);
 
         // Assert
-        assertEquals(2, propertyTransferParams.size());
+        assertEquals(2, transferParams.size());
         verify(ae).buildParams(fields[0]);
         verify(ae).buildParams(fields[1]);
     }
@@ -208,7 +208,7 @@ public class AssemblerTest {
             private String field = null;
         };
 
-        PropertyTransferParams params = new PropertyTransferParams("field", "field", null);
+        TransferParams params = new TransferParams("field", "field", null);
 
         // Act
         ae.copyProperty(dto, null, params);
@@ -224,7 +224,7 @@ public class AssemblerTest {
             private String field = null;
         };
 
-        PropertyTransferParams params = new PropertyTransferParams("field", "field", null);
+        TransferParams params = new TransferParams("field", "field", null);
 
         // Act
         ae.copyProperty(null, model, params);
@@ -261,7 +261,7 @@ public class AssemblerTest {
         };
         Object dto = new Object() {
         };
-        PropertyTransferParams params = new PropertyTransferParams(DTO_FIELD, FIELD, new NoTransformation());
+        TransferParams params = new TransferParams(DTO_FIELD, FIELD, new NoTransformation());
 
         ae = spy(ae);
         doThrow(new NoSuchMethodException()).when(ae).getPropertyValue(model, FIELD);
@@ -283,7 +283,7 @@ public class AssemblerTest {
         };
         Object dto = new Object() {
         };
-        PropertyTransferParams params = new PropertyTransferParams(DTO_FIELD, FIELD, new NoTransformation());
+        TransferParams params = new TransferParams(DTO_FIELD, FIELD, new NoTransformation());
 
         ae = spy(ae);
         doReturn(new IllegalAccessException()).when(ae).getPropertyValue(model, FIELD);
@@ -304,7 +304,7 @@ public class AssemblerTest {
         };
         Object dto = new Object() {
         };
-        PropertyTransferParams params = new PropertyTransferParams(DTO_FIELD, FIELD, new NoTransformation());
+        TransferParams params = new TransferParams(DTO_FIELD, FIELD, new NoTransformation());
 
         ae = spy(ae);
         doReturn(FIELD_VALUE).when(ae).getPropertyValue(model, FIELD);
@@ -329,7 +329,7 @@ public class AssemblerTest {
         };
         Object dto = new Object() {
         };
-        PropertyTransferParams params = new PropertyTransferParams(DTO_FIELD, FIELD, new NoTransformation());
+        TransferParams params = new TransferParams(DTO_FIELD, FIELD, new NoTransformation());
 
         ae = spy(ae);
         doReturn(FIELD_VALUE).when(ae).getPropertyValue(model, FIELD);
@@ -349,7 +349,7 @@ public class AssemblerTest {
         Assembler ae = new Assembler();
         ae = spy(ae);
 
-        PropertyTransferParams params = new PropertyTransferParams(DTO_FIELD, FIELD, new NoTransformation());
+        TransferParams params = new TransferParams(DTO_FIELD, FIELD, new NoTransformation());
         Object model = new Object() {
         };
         Object dto = new Object() {
@@ -381,7 +381,7 @@ public class AssemblerTest {
         transformer = spy(transformer);
         doReturn(TRANSFORMED_VALUE).when(transformer).transform(FIELD_VALUE);
 
-        PropertyTransferParams params = new PropertyTransferParams(DTO_FIELD, FIELD, transformer);
+        TransferParams params = new TransferParams(DTO_FIELD, FIELD, transformer);
         Object model = new Object() {
         };
         Object dto = new Object() {
@@ -426,7 +426,7 @@ public class AssemblerTest {
         // Assert
         assertNotNull(dto);
         verify(ae, times(1)).loadPropertyTransferParams(dtoClass);
-        verify(ae, never()).copyProperty(eq(model), any(), (PropertyTransferParams) any());
+        verify(ae, never()).copyProperty(eq(model), any(), (TransferParams) any());
     }
 
     @Test
@@ -438,7 +438,7 @@ public class AssemblerTest {
         final String MODEL_FIELD = "modelField";
 
         Object model = new Object();
-        PropertyTransferParams params = new PropertyTransferParams(DTO_FIELD, MODEL_FIELD, new NoTransformation());
+        TransferParams params = new TransferParams(DTO_FIELD, MODEL_FIELD, new NoTransformation());
 
         Assembler<DTOWithOneProperty> ae = new Assembler<DTOWithOneProperty>();
         ae = spy(ae);
@@ -466,8 +466,8 @@ public class AssemblerTest {
         final String MODEL_FIELD_2 = "modelField2";
 
         Object model = new Object();
-        PropertyTransferParams params1 = new PropertyTransferParams(DTO_FIELD_1, MODEL_FIELD_1, new NoTransformation());
-        PropertyTransferParams params2 = new PropertyTransferParams(DTO_FIELD_2, MODEL_FIELD_2, new NoTransformation());
+        TransferParams params1 = new TransferParams(DTO_FIELD_1, MODEL_FIELD_1, new NoTransformation());
+        TransferParams params2 = new TransferParams(DTO_FIELD_2, MODEL_FIELD_2, new NoTransformation());
 
         Assembler<DTOWithOneProperty> ae = new Assembler<DTOWithOneProperty>();
         ae = spy(ae);
@@ -506,7 +506,7 @@ public class AssemblerTest {
         // Assert
         assertNotNull(dto);
         verify(ae, times(1)).loadPropertyTransferParams(dtoClass);
-        verify(ae, never()).copyProperty(eq(model), any(), (PropertyTransferParams) any());
+        verify(ae, never()).copyProperty(eq(model), any(), (TransferParams) any());
     }
 
 }

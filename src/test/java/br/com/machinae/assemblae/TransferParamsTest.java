@@ -13,7 +13,7 @@ import java.lang.reflect.Field;
 
 import static org.junit.Assert.*;
 
-public class PropertyTransferParamsTest {
+public class TransferParamsTest {
 
     private static final Class<? extends Annotation> IGNORE_ANNOTATION = Ignore.class;
 
@@ -23,7 +23,7 @@ public class PropertyTransferParamsTest {
     public void getModelPropertyNameShouldReturnsDTONameWhenNull() throws Exception {
         // Arrange
         String expectedPropertyName = "defaultDefined";
-        PropertyTransferParams params = new PropertyTransferParams(expectedPropertyName, null, null);
+        TransferParams params = new TransferParams(expectedPropertyName, null, null);
 
         // Act
         String propertyName = params.getModelProperty();
@@ -37,7 +37,7 @@ public class PropertyTransferParamsTest {
     public void getModelPropertyNameShouldReturnsDTONameWhenEmpty() throws Exception {
         // Arrange
         String expectedPropertyName = "defaultDefined";
-        PropertyTransferParams params = new PropertyTransferParams(expectedPropertyName, "", null);
+        TransferParams params = new TransferParams(expectedPropertyName, "", null);
 
         // Act
         String propertyName = params.getModelProperty();
@@ -52,7 +52,7 @@ public class PropertyTransferParamsTest {
         // Arrange
         String defaultPropertyName = "defaultDefined";
         String expectedPropertyName = "definedDefined";
-        PropertyTransferParams params = new PropertyTransferParams(defaultPropertyName, expectedPropertyName, null);
+        TransferParams params = new TransferParams(defaultPropertyName, expectedPropertyName, null);
 
         // Act
         String propertyName = params.getModelProperty();
@@ -65,7 +65,7 @@ public class PropertyTransferParamsTest {
     @Test(expected = NullPointerException.class)
     public void buildShouldThrowsNullPointerExceptionWhenFieldIsNull() throws IllegalAccessException, InstantiationException {
         // Act
-        PropertyTransferParams.build(null);
+        TransferParams.build(null);
     }
 
     @Test
@@ -79,7 +79,7 @@ public class PropertyTransferParamsTest {
         final String propertyName = field.getName();
 
         // Act
-        PropertyTransferParams params = PropertyTransferParams.build(field);
+        TransferParams params = TransferParams.build(field);
 
         // Assert
         assertEquals(propertyName, params.getDtoProperty());
@@ -99,7 +99,7 @@ public class PropertyTransferParamsTest {
         assertNotNull(modelPropertyName);
 
         // Act
-        PropertyTransferParams params = PropertyTransferParams.build(field);
+        TransferParams params = TransferParams.build(field);
 
         // Assert
         assertEquals(dtoPropertyName, params.getDtoProperty());
@@ -117,7 +117,7 @@ public class PropertyTransferParamsTest {
         assertFalse(field.isAnnotationPresent(IGNORE_ANNOTATION));
 
         // Act
-        PropertyTransferParams params = PropertyTransferParams.build(field);
+        TransferParams params = TransferParams.build(field);
 
         // Assert
         assertTrue(params.getTransformer() instanceof NoTransformation);
@@ -134,7 +134,7 @@ public class PropertyTransferParamsTest {
         assertEquals(definedTransformerClass, NoTransformation.class);
 
         // Act
-        PropertyTransferParams params = PropertyTransferParams.build(field);
+        TransferParams params = TransferParams.build(field);
 
         // Assert
         assertTrue(params.getTransformer() instanceof NoTransformation);
@@ -151,7 +151,7 @@ public class PropertyTransferParamsTest {
         assertFalse(definedTransformerClass.isAssignableFrom(NoTransformation.class));
 
         // Act
-        PropertyTransferParams params = PropertyTransferParams.build(field);
+        TransferParams params = TransferParams.build(field);
 
         // Assert
         assertTrue(definedTransformerClass.isInstance(params.getTransformer()));
