@@ -7,6 +7,7 @@ import org.apache.commons.beanutils.BeanUtilsBean;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -48,9 +49,24 @@ class Assembler<T> implements IAssembler<T>{
         return dto;
     }
 
+    /**
+     * Assemble a list of models properties in a List of Data Transfer Object (DTO), defined by a annotated class.
+     * Each property will be copied using name convention and metadata in annotations declared on
+     * DTO class, metadata will declare conversions, member access e ignored properties.
+     *
+     * @param models collection of model
+     * @param dtoClass dto class
+     * @return dtos collection
+     */
     @Override
-    public Collection<T> assembleAll(Collection<Object> model, Class<T> dtoClass) {
-        return null;
+    public Collection<T> assembleAll(Collection<Object> models, Class<T> dtoClass) {
+        checkNotNull(models, "Model list can not be null");
+
+        Collection<T> dtos = new ArrayList<T>(models.size());
+        for(Object model : models)
+            dtos.add(assemble(model, dtoClass));
+
+        return dtos;
     }
 
 

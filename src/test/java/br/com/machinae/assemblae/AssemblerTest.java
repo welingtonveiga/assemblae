@@ -420,7 +420,6 @@ public class AssemblerTest {
         doReturn(new ArrayList()).when(ae).loadPropertyTransferParams(dtoClass);
 
         // Act
-        Assemblae.setInstance(ae);
         DTOWithOneProperty dto = ae.assemble(model, DTOWithOneProperty.class);
 
         // Assert
@@ -446,7 +445,6 @@ public class AssemblerTest {
         doNothing().when(ae).copyProperty(eq(model), any(), eq(params));
 
         // Act
-        Assemblae.setInstance(ae);
         DTOWithOneProperty dto = ae.assemble(model, DTOWithOneProperty.class);
 
         // Assert
@@ -476,7 +474,6 @@ public class AssemblerTest {
         doNothing().when(ae).copyProperty(eq(model), any(), eq(params2));
 
         // Act
-        Assemblae.setInstance(ae);
         DTOWithOneProperty dto = ae.assemble(model, DTOWithOneProperty.class);
 
         // Assert
@@ -500,13 +497,48 @@ public class AssemblerTest {
         doReturn(new ArrayList()).when(ae).loadPropertyTransferParams(dtoClass);
 
         // Act
-        Assemblae.setInstance(ae);
         DTOWithOneProperty dto = ae.assemble(model, DTOWithOneProperty.class);
 
         // Assert
         assertNotNull(dto);
         verify(ae, times(1)).loadPropertyTransferParams(dtoClass);
         verify(ae, never()).copyProperty(eq(model), any(), (TransferParams) any());
+    }
+
+
+    @Test(expected = NullPointerException.class)
+    public void assembleAllShouldThrowNullPointerExceptionWhenModelListIsNull(){
+
+        // Arrange
+        Assembler<DTOWithOneProperty> ae = new Assembler<DTOWithOneProperty>();
+
+        // Act
+        ae.assembleAll(null, DTOWithOneProperty.class);
+    }
+
+
+
+    @Test
+    public void assembleAllShouldCallAssembleForEachModel(){
+
+        // Arrange
+        final Object model1 = new Object(){};
+        final Object model2 = new Object(){};
+
+        Assembler<DTOWithOneProperty> ae = new Assembler<DTOWithOneProperty>();
+        Collection<Object> models = Arrays.asList( model1, model2);
+
+        ae = spy(ae);
+        doReturn(new DTOWithOneProperty()).when(ae).assemble(any(), eq(DTOWithOneProperty.class));
+
+        // Act
+        Collection<DTOWithOneProperty> dtos = ae.assembleAll(models, DTOWithOneProperty.class);
+
+        // Assert
+        assertEquals(2, dtos.size());
+        verify(ae, times(1)).assemble(model1, DTOWithOneProperty.class);
+        verify(ae, times(1)).assemble(model2, DTOWithOneProperty.class);
+
     }
 
 }
