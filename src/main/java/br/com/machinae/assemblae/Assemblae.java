@@ -14,7 +14,7 @@ import java.util.Collection;
  */
 public class Assemblae {
 
-    Assemblae(){}
+    private Assemblae(){}
 
     private static Assembler instance;
 
@@ -41,8 +41,9 @@ public class Assemblae {
         return  ae.assemble(model, dtoClass);
     }
 
-    public static <T> Collection<T> assembleAll(Collection<T> model, Class<T> dtoClass){
-        return null;
+    public static <T> Collection<T> assembleAll(Collection<Object> models, Class<T> dtoClass){
+        Assembler<T> ae = new Assembler<T>();
+        return ae.assembleAll(models, dtoClass);
     }
 
 }
