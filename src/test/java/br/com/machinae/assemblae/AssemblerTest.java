@@ -420,7 +420,7 @@ public class AssemblerTest {
         doReturn(new ArrayList()).when(ae).loadPropertyTransferParams(dtoClass);
 
         // Act
-        Assemblae2.setInstance(ae);
+        Assemblae.setInstance(ae);
         DTOWithOneProperty dto = ae.assemble(model, DTOWithOneProperty.class);
 
         // Assert
@@ -446,7 +446,7 @@ public class AssemblerTest {
         doNothing().when(ae).copyProperty(eq(model), any(), eq(params));
 
         // Act
-        Assemblae2.setInstance(ae);
+        Assemblae.setInstance(ae);
         DTOWithOneProperty dto = ae.assemble(model, DTOWithOneProperty.class);
 
         // Assert
@@ -476,7 +476,7 @@ public class AssemblerTest {
         doNothing().when(ae).copyProperty(eq(model), any(), eq(params2));
 
         // Act
-        Assemblae2.setInstance(ae);
+        Assemblae.setInstance(ae);
         DTOWithOneProperty dto = ae.assemble(model, DTOWithOneProperty.class);
 
         // Assert
@@ -500,7 +500,7 @@ public class AssemblerTest {
         doReturn(new ArrayList()).when(ae).loadPropertyTransferParams(dtoClass);
 
         // Act
-        Assemblae2.setInstance(ae);
+        Assemblae.setInstance(ae);
         DTOWithOneProperty dto = ae.assemble(model, DTOWithOneProperty.class);
 
         // Assert

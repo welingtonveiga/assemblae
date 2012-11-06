@@ -15,7 +15,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Assembler is a IAssembler implementation for assembly service used by exposed static Assemblae2 utility.
+ * Assembler is a IAssembler implementation for assembly service used by exposed static Assemblae utility.
  *
  * @author Welington Veiga
  * @since 05/11/2012

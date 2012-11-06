@@ -12,23 +12,23 @@ import java.util.Collection;
  * @see <a href="http://www.inspire-software.com/en/index/view/open-source-GeDA-generic-DTO-assembler.html> Inspiração </a>
  * @since 21/10/2012
  */
-public class Assemblae2 {
+public class Assemblae {
 
-    Assemblae2(){}
+    Assemblae(){}
 
     private static Assembler instance;
 
     /**
-     * Define a Assemblae2 instance for exposed static assemble methods.
-     * @param ae Assemblae2 instance
+     * Define a Assemblae instance for exposed static assemble methods.
+     * @param ae Assemblae instance
      */
     static void setInstance(Assembler ae) {
         instance = ae;
     }
 
     /**
-     * A Assemblae2 instance for exposed static assemble methods.
-     * @return Assemblae2 instance
+     * A Assemblae instance for exposed static assemble methods.
+     * @return Assemblae instance
      */
     static Assembler getInstance() {
         if(instance == null)
