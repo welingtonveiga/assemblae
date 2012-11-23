@@ -16,16 +16,16 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Assembler is a IAssembler implementation for assembly service used by exposed static Assemblae utility.
+ * AssemblerImpl is a IAssembler implementation for assembly service used by exposed static Assemblae utility.
  *
  * @author Welington Veiga
  * @since 05/11/2012
  *
  * @param <T> DTO type
  */
-class Assembler<T> implements IAssembler<T>{
+class AssemblerImpl<T> implements IAssembler<T>{
 
-    Assembler(){}
+    AssemblerImpl(){}
 
     /**
      * Assemble a model properties in a Data Transfer Object (DTO), defined by a annotated class.

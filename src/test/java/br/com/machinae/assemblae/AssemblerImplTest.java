@@ -17,13 +17,13 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 /**
- * Test class for Assembler
+ * Test class for AssemblerImpl
  *
  * @author Welington Veiga
  * @version 1.0.0
  * @since 21/10/2012
  */
-public class AssemblerTest {
+public class AssemblerImplTest {
 
 
     private static final Class<? extends Annotation> MAPPED_PROPERTY_ANNOTATION = MappedProperty.class;
@@ -32,7 +32,7 @@ public class AssemblerTest {
     @Test(expected = NullPointerException.class)
     public void loadPropertyTransferParamsShouldThrowsNullPointerExceptionLoadingANullClass() {
         // Arrange
-        Assembler ae = new Assembler();
+        AssemblerImpl ae = new AssemblerImpl();
 
         // Act
         Collection<TransferParams> transferParams = ae.loadPropertyTransferParams(null);
@@ -42,7 +42,7 @@ public class AssemblerTest {
     public void loadPropertyTransferParamsShouldThrowsIllegalArgumentExceptionLoadingANotDTOClass() {
         // Arrange
         Class<? extends Object> clazz = new Object() {}.getClass();
-        Assembler ae = new Assembler();
+        AssemblerImpl ae = new AssemblerImpl();
 
         // Input Assert
         assertFalse("The DTO class should not be a DTO", clazz.isAnnotationPresent(DataTransferObject.class));
@@ -54,7 +54,7 @@ public class AssemblerTest {
     @Test
     public void loadPropertyTransferParamsShouldReturnAnEmptyListForDTOWithoutProperties() {
         // Arrange
-        Assembler ae = new Assembler();
+        AssemblerImpl ae = new AssemblerImpl();
         ae = spy(ae);
         doReturn(new TransferParams()).when(ae).buildParams((Field) any());
 
@@ -74,7 +74,7 @@ public class AssemblerTest {
     @Test
     public void loadPropertyTransferParamsShouldGetAnNonIgnoredPropertiesMapped() throws Exception {
         // Arrange
-        Assembler ae = new Assembler();
+        AssemblerImpl ae = new AssemblerImpl();
         Class<?> dtoClass = DTOWithOneIgnoredProperty.class;
         Field field = dtoClass.getDeclaredFields()[0];
 
@@ -95,7 +95,7 @@ public class AssemblerTest {
     @Test
     public void loadPropertyTransferParamsShouldReturnAPropertyWithoutAnnotations() throws Exception {
         // Arrange
-        Assembler ae = new Assembler();
+        AssemblerImpl ae = new AssemblerImpl();
         Class<?> dtoClass = DTOWithOneProperty.class;
         Field field = dtoClass.getDeclaredFields()[0];
 
@@ -117,7 +117,7 @@ public class AssemblerTest {
     @Test
     public void loadPropertyTransferParamsShouldReturnAllNotIgnoredPropertiesMapped() throws Exception {
         // Arrange
-        Assembler ae = new Assembler();
+        AssemblerImpl ae = new AssemblerImpl();
         Class<?> dtoClass = DTOWithOneIgnoredAndOneNotAnnotatedProperty.class;
         Field[] fields = dtoClass.getDeclaredFields();
 
@@ -153,7 +153,7 @@ public class AssemblerTest {
     @Test
     public void loadPropertyTransferParamsShouldReturnAPropertyWithMappedPropertyAnnotation() throws Exception {
         // Arrange
-        Assembler ae = new Assembler();
+        AssemblerImpl ae = new AssemblerImpl();
         Class<?> dtoClass = DTOWithOneMappedProperty.class;
         Field field = dtoClass.getDeclaredFields()[0];
 
@@ -175,7 +175,7 @@ public class AssemblerTest {
     @Test
     public void loadPropertyTransferParamsShouldReturnAllPropertiesMappedAndNotAnnotated() throws Exception {
         // Arrange
-        Assembler ae = new Assembler();
+        AssemblerImpl ae = new AssemblerImpl();
         Class<?> dtoClass = DTOWithOneMappedAndOneNotAnnotatedProperty.class;
         Field[] fields = dtoClass.getDeclaredFields();
 
@@ -202,7 +202,7 @@ public class AssemblerTest {
     @Test(expected = NullPointerException.class)
     public void copyPropertiesShouldThrowsNullPointerExceptionForNullModel() {
         // Arrange
-        Assembler ae = new Assembler();
+        AssemblerImpl ae = new AssemblerImpl();
 
         Object dto = new Object() {
             private String field = null;
@@ -218,7 +218,7 @@ public class AssemblerTest {
     @Test(expected = NullPointerException.class)
     public void copyPropertiesShouldThrowsNullPointerExceptionForNullDTO() {
         // Arrange
-        Assembler ae = new Assembler();
+        AssemblerImpl ae = new AssemblerImpl();
 
         Object model = new Object() {
             private String field = null;
@@ -234,7 +234,7 @@ public class AssemblerTest {
     @Test(expected = NullPointerException.class)
     public void copyPropertiesShouldThrowsNullPointerExceptionForNullParams() {
         // Arrange
-        Assembler ae = new Assembler();
+        AssemblerImpl ae = new AssemblerImpl();
 
         Object model = new Object() {
             private String field = null;
@@ -252,7 +252,7 @@ public class AssemblerTest {
     @Test(expected = AssemblerException.class)
     public void copyPropertiesShouldThrowsExceptionForInvalidModelPropertyName() throws Exception {
         // Arrange
-        Assembler ae = new Assembler();
+        AssemblerImpl ae = new AssemblerImpl();
 
         final String FIELD = "field";
         final String DTO_FIELD = "dtoField";
@@ -277,7 +277,7 @@ public class AssemblerTest {
         final String FIELD = "field";
         final String DTO_FIELD = "dtoField";
 
-        Assembler ae = new Assembler();
+        AssemblerImpl ae = new AssemblerImpl();
 
         Object model = new Object() {
         };
@@ -298,7 +298,7 @@ public class AssemblerTest {
         final String FIELD = "field";
         final String DTO_FIELD = "dtoField";
 
-        Assembler ae = new Assembler();
+        AssemblerImpl ae = new AssemblerImpl();
 
         Object model = new Object() {
         };
@@ -323,7 +323,7 @@ public class AssemblerTest {
         final String FIELD = "field";
         final String DTO_FIELD = "dtoField";
 
-        Assembler ae = new Assembler();
+        AssemblerImpl ae = new AssemblerImpl();
 
         Object model = new Object() {
         };
@@ -346,7 +346,7 @@ public class AssemblerTest {
         final String FIELD = "field";
         final String DTO_FIELD = "dtoField";
 
-        Assembler ae = new Assembler();
+        AssemblerImpl ae = new AssemblerImpl();
         ae = spy(ae);
 
         TransferParams params = new TransferParams(DTO_FIELD, FIELD, new NoTransformation());
@@ -374,7 +374,7 @@ public class AssemblerTest {
         final String DTO_FIELD = "dtoField";
         final String TRANSFORMED_VALUE = "1";
 
-        Assembler ae = new Assembler();
+        AssemblerImpl ae = new AssemblerImpl();
         ae = spy(ae);
 
         Transformer transformer = new NoTransformation();
@@ -402,7 +402,7 @@ public class AssemblerTest {
 
         // Arrange
         Object model = null;
-        Assembler<DTOWithOneProperty> dto = new Assembler<DTOWithOneProperty>();
+        AssemblerImpl<DTOWithOneProperty> dto = new AssemblerImpl<DTOWithOneProperty>();
         // Act
         dto.assemble(model, DTOWithOneProperty.class);
     }
@@ -415,7 +415,7 @@ public class AssemblerTest {
 
         Object model = new Object();
 
-        Assembler<DTOWithOneProperty> ae = new Assembler<DTOWithOneProperty>();
+        AssemblerImpl<DTOWithOneProperty> ae = new AssemblerImpl<DTOWithOneProperty>();
         ae = spy(ae);
         doReturn(new ArrayList()).when(ae).loadPropertyTransferParams(dtoClass);
 
@@ -439,7 +439,7 @@ public class AssemblerTest {
         Object model = new Object();
         TransferParams params = new TransferParams(DTO_FIELD, MODEL_FIELD, new NoTransformation());
 
-        Assembler<DTOWithOneProperty> ae = new Assembler<DTOWithOneProperty>();
+        AssemblerImpl<DTOWithOneProperty> ae = new AssemblerImpl<DTOWithOneProperty>();
         ae = spy(ae);
         doReturn(Arrays.asList(params)).when(ae).loadPropertyTransferParams(dtoClass);
         doNothing().when(ae).copyProperty(eq(model), any(), eq(params));
@@ -467,7 +467,7 @@ public class AssemblerTest {
         TransferParams params1 = new TransferParams(DTO_FIELD_1, MODEL_FIELD_1, new NoTransformation());
         TransferParams params2 = new TransferParams(DTO_FIELD_2, MODEL_FIELD_2, new NoTransformation());
 
-        Assembler<DTOWithOneProperty> ae = new Assembler<DTOWithOneProperty>();
+        AssemblerImpl<DTOWithOneProperty> ae = new AssemblerImpl<DTOWithOneProperty>();
         ae = spy(ae);
         doReturn(Arrays.asList(params1, params2)).when(ae).loadPropertyTransferParams(dtoClass);
         doNothing().when(ae).copyProperty(eq(model), any(), eq(params1));
@@ -492,7 +492,7 @@ public class AssemblerTest {
 
         Object model = new Object();
 
-        Assembler<DTOWithOneProperty> ae = new Assembler<DTOWithOneProperty>();
+        AssemblerImpl<DTOWithOneProperty> ae = new AssemblerImpl<DTOWithOneProperty>();
         ae = spy(ae);
         doReturn(new ArrayList()).when(ae).loadPropertyTransferParams(dtoClass);
 
@@ -510,7 +510,7 @@ public class AssemblerTest {
     public void assembleAllShouldThrowNullPointerExceptionWhenModelListIsNull(){
 
         // Arrange
-        Assembler<DTOWithOneProperty> ae = new Assembler<DTOWithOneProperty>();
+        AssemblerImpl<DTOWithOneProperty> ae = new AssemblerImpl<DTOWithOneProperty>();
 
         // Act
         ae.assembleAll(null, DTOWithOneProperty.class);
@@ -525,7 +525,7 @@ public class AssemblerTest {
         final Object model1 = new Object(){};
         final Object model2 = new Object(){};
 
-        Assembler<DTOWithOneProperty> ae = new Assembler<DTOWithOneProperty>();
+        AssemblerImpl<DTOWithOneProperty> ae = new AssemblerImpl<DTOWithOneProperty>();
         Collection<Object> models = Arrays.asList( model1, model2);
 
         ae = spy(ae);

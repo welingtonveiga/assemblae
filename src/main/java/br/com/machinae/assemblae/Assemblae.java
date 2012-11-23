@@ -16,13 +16,13 @@ public class Assemblae {
 
     private Assemblae(){}
 
-    private static Assembler instance;
+    private static IAssembler instance;
 
     /**
      * Define a Assemblae instance for exposed static assemble methods.
      * @param ae Assemblae instance
      */
-    static void setInstance(Assembler ae) {
+    static void setInstance(IAssembler ae) {
         instance = ae;
     }
 
@@ -30,19 +30,19 @@ public class Assemblae {
      * A Assemblae instance for exposed static assemble methods.
      * @return Assemblae instance
      */
-    static Assembler getInstance() {
+    static IAssembler getInstance() {
         if(instance == null)
-            instance = new Assembler();
+            instance = new AssemblerImpl();
         return instance;
     }
 
     public static <T> T assemble(Object model, Class<T> dtoClass) {
-        Assembler<T> ae = new Assembler<T>();
+        IAssembler<T> ae = new AssemblerImpl<T>();
         return  ae.assemble(model, dtoClass);
     }
 
     public static <T> Collection<T> assembleAll(Collection<Object> models, Class<T> dtoClass){
-        Assembler<T> ae = new Assembler<T>();
+        IAssembler<T> ae = new AssemblerImpl<T>();
         return ae.assembleAll(models, dtoClass);
     }
 

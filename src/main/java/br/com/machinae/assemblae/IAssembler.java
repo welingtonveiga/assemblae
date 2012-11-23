@@ -3,7 +3,7 @@ package br.com.machinae.assemblae;
 import java.util.Collection;
 
 /**
- * Assembler service interface.
+ * IAssembler service interface.
  *
  * @param <T>
  */
