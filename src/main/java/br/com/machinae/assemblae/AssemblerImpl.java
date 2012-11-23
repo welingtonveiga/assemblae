@@ -44,7 +44,7 @@ class AssemblerImpl<T> implements Assembler<T> {
 
         Collection<TransferParams> params = loadPropertyTransferParams(dtoClass);
         for(TransferParams param : params)
-            copyProperty(model, dto, param);
+            copyPropertyFromModelToDTO(model, dto, param);
 
         return dto;
     }
@@ -119,6 +119,29 @@ class AssemblerImpl<T> implements Assembler<T> {
         return dto;
     }
 
+   void copyPropertyFromDTOToModel(Object dto, Object model, TransferParams param)
+    {
+        checkNotNull(model, "Model cant be null for copying.");
+        checkNotNull(dto, "DTO cant be null for copying.");
+        checkNotNull(param, "Copy params cant be null");
+
+        try {
+            final String modelProperty = param.getModelProperty();
+            final String dtoProperty = param.getDtoProperty();
+            final Object value = getPropertyValue(dto, dtoProperty);
+
+            setPropertyValue(model, modelProperty, param.getTransformer().reverse(value));
+
+        } catch (IllegalAccessException e) {
+            throw new AssemblerException("Property copy error", e);
+        } catch (InvocationTargetException e) {
+            throw new AssemblerException("Property copy error", e);
+        } catch (NoSuchMethodException e) {
+            throw new AssemblerException("Property copy error", e);
+        }
+
+    }
+
     /**
      * Utility for copy an property from model to DTO, applying the appropriate transformation
      *
@@ -126,10 +149,10 @@ class AssemblerImpl<T> implements Assembler<T> {
      * @param dto   model where the property will be copied
      * @param param copy parameters
      */
-    void copyProperty(Object model, Object dto, TransferParams param) {
+    void copyPropertyFromModelToDTO(Object model, Object dto, TransferParams param) {
         checkNotNull(model, "Model cant be null for copying.");
         checkNotNull(dto, "DTO cant be null for copying.");
-        checkNotNull(param, "Transfer params cant be null for copying.");
+        checkNotNull(param, "Copy params cant be null");
 
         try {
             final String modelProperty = param.getModelProperty();

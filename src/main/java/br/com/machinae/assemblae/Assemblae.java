@@ -16,26 +16,6 @@ public class Assemblae {
 
     private Assemblae(){}
 
-    private static Assembler instance;
-
-    /**
-     * Define a Assemblae instance for exposed static assemble methods.
-     * @param ae Assemblae instance
-     */
-    static void setInstance(Assembler ae) {
-        instance = ae;
-    }
-
-    /**
-     * A Assemblae instance for exposed static assemble methods.
-     * @return Assemblae instance
-     */
-    static Assembler getInstance() {
-        if(instance == null)
-            instance = new AssemblerImpl();
-        return instance;
-    }
-
     public static <T> T assemble(Object model, Class<T> dtoClass) {
         Assembler<T> ae = new AssemblerImpl<T>();
         return  ae.assemble(model, dtoClass);

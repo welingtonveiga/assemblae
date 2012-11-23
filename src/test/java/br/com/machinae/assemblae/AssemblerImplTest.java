@@ -211,7 +211,7 @@ public class AssemblerImplTest {
         TransferParams params = new TransferParams("field", "field", null);
 
         // Act
-        ae.copyProperty(dto, null, params);
+        ae.copyPropertyFromModelToDTO(null, dto, params);
 
     }
 
@@ -227,27 +227,11 @@ public class AssemblerImplTest {
         TransferParams params = new TransferParams("field", "field", null);
 
         // Act
-        ae.copyProperty(null, model, params);
+        ae.copyPropertyFromModelToDTO(model, null, params);
 
     }
 
-    @Test(expected = NullPointerException.class)
-    public void copyPropertiesShouldThrowsNullPointerExceptionForNullParams() {
-        // Arrange
-        AssemblerImpl ae = new AssemblerImpl();
 
-        Object model = new Object() {
-            private String field = null;
-        };
-
-        Object dto = new Object() {
-            private String field = null;
-        };
-
-        // Act
-        ae.copyProperty(dto, model, null);
-
-    }
 
     @Test(expected = AssemblerException.class)
     public void copyPropertiesShouldThrowsExceptionForInvalidModelPropertyName() throws Exception {
@@ -266,7 +250,7 @@ public class AssemblerImplTest {
         ae = spy(ae);
         doThrow(new NoSuchMethodException()).when(ae).getPropertyValue(model, FIELD);
 
-        ae.copyProperty(model, dto, params);
+        ae.copyPropertyFromModelToDTO(model, dto, params);
 
     }
 
@@ -288,7 +272,7 @@ public class AssemblerImplTest {
         ae = spy(ae);
         doReturn(new IllegalAccessException()).when(ae).getPropertyValue(model, FIELD);
 
-        ae.copyProperty(model, dto, params);
+        ae.copyPropertyFromModelToDTO(model, dto, params);
     }
 
     @Test(expected = AssemblerException.class)
@@ -311,7 +295,7 @@ public class AssemblerImplTest {
         doThrow(new NoSuchMethodException()).when(ae).setPropertyValue(dto, DTO_FIELD, FIELD_VALUE);
 
         // Act
-        ae.copyProperty(model, dto, params);
+        ae.copyPropertyFromModelToDTO(model, dto, params);
 
     }
 
@@ -336,7 +320,7 @@ public class AssemblerImplTest {
         doThrow(new IllegalAccessException()).when(ae).setPropertyValue(dto, DTO_FIELD, FIELD_VALUE);
 
         // Act
-        ae.copyProperty(model, dto, params);
+        ae.copyPropertyFromModelToDTO(model, dto, params);
     }
 
     @Test
@@ -359,7 +343,7 @@ public class AssemblerImplTest {
         doNothing().when(ae).setPropertyValue(dto, DTO_FIELD, FIELD_VALUE);
 
         // Act
-        ae.copyProperty(model, dto, params);
+        ae.copyPropertyFromModelToDTO(model, dto, params);
 
         // Assert
         verify(ae, times(1)).setPropertyValue(dto, DTO_FIELD, FIELD_VALUE);
@@ -391,11 +375,203 @@ public class AssemblerImplTest {
         doNothing().when(ae).setPropertyValue(dto, DTO_FIELD, TRANSFORMED_VALUE);
 
         // Act
-        ae.copyProperty(model, dto, params);
+        ae.copyPropertyFromModelToDTO(model, dto, params);
 
         // Assert
         verify(ae, times(1)).setPropertyValue(dto, DTO_FIELD, TRANSFORMED_VALUE);
     }
+
+
+    @Test(expected = NullPointerException.class)
+    public void copyPropertyFromModelToDTOShouldThrowsNullPointerExceptionForNullParams() {
+        // Arrange
+        AssemblerImpl ae = new AssemblerImpl();
+
+        Object model = new Object() {
+            private String field = null;
+        };
+
+        Object dto = new Object() {
+            private String field = null;
+        };
+
+        // Act
+        ae.copyPropertyFromModelToDTO(model, dto, null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void copyPropertiesFromDTOToModelShouldThrowsNullPointerExceptionForNullModel() {
+        // Arrange
+        AssemblerImpl ae = new AssemblerImpl();
+
+        Object dto = new Object() {
+            private String field = null;
+        };
+
+        TransferParams params = new TransferParams("field", "field", null);
+
+        // Act
+        ae.copyPropertyFromDTOToModel(dto, null, params);
+
+    }
+
+    @Test(expected = AssemblerException.class)
+    public void copyPropertiesFromDTOToModelShouldThrowsExceptionForInvalidModelPropertyName() throws Exception {
+        // Arrange
+        AssemblerImpl ae = new AssemblerImpl();
+
+        final String FIELD = "field";
+        final String DTO_FIELD = "dtoField";
+
+        Object model = new Object() {
+        };
+        Object dto = new Object() {
+        };
+        TransferParams params = new TransferParams(DTO_FIELD, FIELD, new NoTransformation());
+
+        ae = spy(ae);
+        doThrow(new NoSuchMethodException()).when(ae).getPropertyValue(model, FIELD);
+
+        ae.copyPropertyFromDTOToModel(dto, model, params);
+
+    }
+
+
+    @Test(expected = AssemblerException.class)
+    public void copyPropertiesFromDTOToModelShouldThrowsExceptionForPrivateModelPropertyName() throws Exception {
+        // Arrange
+        final String FIELD = "field";
+        final String DTO_FIELD = "dtoField";
+
+        AssemblerImpl ae = new AssemblerImpl();
+
+        Object model = new Object() {
+        };
+        Object dto = new Object() {
+        };
+        TransferParams params = new TransferParams(DTO_FIELD, FIELD, new NoTransformation());
+
+        ae = spy(ae);
+        doReturn(new IllegalAccessException()).when(ae).getPropertyValue(model, FIELD);
+
+        ae.copyPropertyFromDTOToModel(dto, model, params);
+    }
+
+    @Test(expected = AssemblerException.class)
+    public void copyPropertiesFromDTOToModelShouldThrowsExceptionForInvalidDtoPropertyName() throws Exception {
+        // Arrange
+        final Integer FIELD_VALUE = 1;
+        final String FIELD = "field";
+        final String DTO_FIELD = "dtoField";
+
+        AssemblerImpl ae = new AssemblerImpl();
+
+        Object model = new Object() {
+        };
+        Object dto = new Object() {
+        };
+        TransferParams params = new TransferParams(DTO_FIELD, FIELD, new NoTransformation());
+
+        ae = spy(ae);
+        doReturn(FIELD_VALUE).when(ae).getPropertyValue(model, FIELD);
+        doThrow(new NoSuchMethodException()).when(ae).setPropertyValue(dto, DTO_FIELD, FIELD_VALUE);
+
+        // Act
+        ae.copyPropertyFromDTOToModel(dto, model, params);
+
+    }
+
+    @Test
+    public void copyPropertiesFromDTOToModelShouldReturnFieldCopy() throws Exception {
+        // Arrange
+        final Integer FIELD_VALUE = 1;
+        final String FIELD = "field";
+        final String DTO_FIELD = "dtoField";
+
+        AssemblerImpl ae = new AssemblerImpl();
+        ae = spy(ae);
+
+        TransferParams params = new TransferParams(DTO_FIELD, FIELD, new NoTransformation());
+        Object model = new Object() {
+        };
+        Object dto = new Object() {
+        };
+
+        doReturn(FIELD_VALUE).when(ae).getPropertyValue(dto, DTO_FIELD);
+        doNothing().when(ae).setPropertyValue(model, FIELD, FIELD_VALUE);
+
+        // Act
+        ae.copyPropertyFromDTOToModel(dto, model, params);
+
+        // Assert
+        verify(ae, times(1)).setPropertyValue(model, FIELD, FIELD_VALUE);
+    }
+
+
+    @Test(expected = NullPointerException.class)
+    public void copyPropertyFromDTOToModelShouldThrowsNullPointerExceptionForNullParams() {
+        // Arrange
+        AssemblerImpl ae = new AssemblerImpl();
+
+        Object model = new Object() {
+            private String field = null;
+        };
+
+        Object dto = new Object() {
+            private String field = null;
+        };
+
+        // Act
+        ae.copyPropertyFromDTOToModel(dto, model, null);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void copyPropertiesFromDTOToModelShouldReturnTransformedFieldCopy() throws Exception {
+        // Arrange
+        final Integer FIELD_VALUE = 1;
+        final String FIELD = "field";
+        final String DTO_FIELD = "dtoField";
+        final String TRANSFORMED_VALUE = "1";
+
+        AssemblerImpl ae = new AssemblerImpl();
+        ae = spy(ae);
+
+        Transformer transformer = new NoTransformation();
+        transformer = spy(transformer);
+        doReturn(TRANSFORMED_VALUE).when(transformer).reverse(FIELD_VALUE);
+
+        TransferParams params = new TransferParams(DTO_FIELD, FIELD, transformer);
+        Object model = new Object() {};
+        Object dto = new Object() {};
+
+        doReturn(FIELD_VALUE).when(ae).getPropertyValue(dto, DTO_FIELD);
+        doNothing().when(ae).setPropertyValue(model, FIELD, TRANSFORMED_VALUE);
+
+
+        // Act
+        ae.copyPropertyFromDTOToModel(dto, model, params);
+
+        // Assert
+        verify(ae, times(1)).setPropertyValue(model, FIELD, TRANSFORMED_VALUE);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void copyPropertiesFromDTOToModelShouldThrowsNullPointerExceptionForNullDTO() {
+        // Arrange
+        AssemblerImpl ae = new AssemblerImpl();
+
+        Object model = new Object() {
+            private String field = null;
+        };
+
+        TransferParams params = new TransferParams("field", "field", null);
+
+        // Act
+        ae.copyPropertyFromDTOToModel(null, model, params);
+
+    }
+
 
     @Test(expected = NullPointerException.class)
     public void assembleShouldThrowNullPointerExceptionWhenModelIsNull(){
@@ -425,7 +601,7 @@ public class AssemblerImplTest {
         // Assert
         assertNotNull(dto);
         verify(ae, times(1)).loadPropertyTransferParams(dtoClass);
-        verify(ae, never()).copyProperty(eq(model), any(), (TransferParams) any());
+        verify(ae, never()).copyPropertyFromModelToDTO(eq(model), any(), (TransferParams) any());
     }
 
     @Test
@@ -442,7 +618,7 @@ public class AssemblerImplTest {
         AssemblerImpl<DTOWithOneProperty> ae = new AssemblerImpl<DTOWithOneProperty>();
         ae = spy(ae);
         doReturn(Arrays.asList(params)).when(ae).loadPropertyTransferParams(dtoClass);
-        doNothing().when(ae).copyProperty(eq(model), any(), eq(params));
+        doNothing().when(ae).copyPropertyFromModelToDTO(eq(model), any(), eq(params));
 
         // Act
         DTOWithOneProperty dto = ae.assemble(model, DTOWithOneProperty.class);
@@ -450,7 +626,7 @@ public class AssemblerImplTest {
         // Assert
         assertNotNull(dto);
         verify(ae, times(1)).loadPropertyTransferParams(dtoClass);
-        verify(ae, times(1)).copyProperty(eq(model), any(), eq(params));
+        verify(ae, times(1)).copyPropertyFromModelToDTO(eq(model), any(), eq(params));
     }
 
     @Test
@@ -470,8 +646,8 @@ public class AssemblerImplTest {
         AssemblerImpl<DTOWithOneProperty> ae = new AssemblerImpl<DTOWithOneProperty>();
         ae = spy(ae);
         doReturn(Arrays.asList(params1, params2)).when(ae).loadPropertyTransferParams(dtoClass);
-        doNothing().when(ae).copyProperty(eq(model), any(), eq(params1));
-        doNothing().when(ae).copyProperty(eq(model), any(), eq(params2));
+        doNothing().when(ae).copyPropertyFromModelToDTO(eq(model), any(), eq(params1));
+        doNothing().when(ae).copyPropertyFromModelToDTO(eq(model), any(), eq(params2));
 
         // Act
         DTOWithOneProperty dto = ae.assemble(model, DTOWithOneProperty.class);
@@ -479,8 +655,8 @@ public class AssemblerImplTest {
         // Assert
         assertNotNull(dto);
         verify(ae, times(1)).loadPropertyTransferParams(dtoClass);
-        verify(ae, times(1)).copyProperty(eq(model), any(), eq(params1));
-        verify(ae, times(1)).copyProperty(eq(model), any(), eq(params2));
+        verify(ae, times(1)).copyPropertyFromModelToDTO(eq(model), any(), eq(params1));
+        verify(ae, times(1)).copyPropertyFromModelToDTO(eq(model), any(), eq(params2));
     }
 
 
@@ -502,7 +678,7 @@ public class AssemblerImplTest {
         // Assert
         assertNotNull(dto);
         verify(ae, times(1)).loadPropertyTransferParams(dtoClass);
-        verify(ae, never()).copyProperty(eq(model), any(), (TransferParams) any());
+        verify(ae, never()).copyPropertyFromModelToDTO(eq(model), any(), (TransferParams) any());
     }
 
 
@@ -515,8 +691,6 @@ public class AssemblerImplTest {
         // Act
         ae.assembleAll(null, DTOWithOneProperty.class);
     }
-
-
 
     @Test
     public void assembleAllShouldCallAssembleForEachModel(){
@@ -538,7 +712,6 @@ public class AssemblerImplTest {
         assertEquals(2, dtos.size());
         verify(ae, times(1)).assemble(model1, DTOWithOneProperty.class);
         verify(ae, times(1)).assemble(model2, DTOWithOneProperty.class);
-
     }
 
 }
