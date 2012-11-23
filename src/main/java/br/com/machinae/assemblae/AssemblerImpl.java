@@ -16,14 +16,14 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * AssemblerImpl is a IAssembler implementation for assembly service used by exposed static Assemblae utility.
+ * AssemblerImpl is a Assembler implementation for assembly service used by exposed static Assemblae utility.
  *
  * @author Welington Veiga
  * @since 05/11/2012
  *
  * @param <T> DTO type
  */
-class AssemblerImpl<T> implements IAssembler<T>{
+class AssemblerImpl<T> implements Assembler<T> {
 
     AssemblerImpl(){}
 

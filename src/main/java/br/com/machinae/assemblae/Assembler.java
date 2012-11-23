@@ -3,11 +3,11 @@ package br.com.machinae.assemblae;
 import java.util.Collection;
 
 /**
- * IAssembler service interface.
+ * Assembler service interface.
  *
  * @param <T>
  */
-public interface IAssembler<T> {
+public interface Assembler<T> {
 
     T assemble(Object model, Class<T> dtoClass);
 
